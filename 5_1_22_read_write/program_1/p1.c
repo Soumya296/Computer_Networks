@@ -59,7 +59,7 @@ int main()
 	char *buf;
 	int fd1 = open("f1.txt", O_RDONLY);
 	int fd2 = open("f2.txt", O_RDONLY);
-	int fd3 = open("f3.txt", O_CREAT | O_TRUNC | O_APPEND | O_WRONLY, 0666);
+	int fd3 = open("f3.txt", O_CREAT | O_TRUNC | O_APPEND | O_WRONLY, 0777);
 
 	int num1, num2;
 	int eof1 = 1;
