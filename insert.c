@@ -8,7 +8,7 @@ int main(int argc, char** argv)
     int fd = open("system_calls.txt", O_WRONLY|O_APPEND);
     for(int i=1; i<argc; i++)
     {
-        write(fd,argv[i], sizeof(argv[i]));
+        write(fd,argv[i],strlen(argv[i]));
         write(fd,"\n",1);
     }
 
