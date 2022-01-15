@@ -28,5 +28,5 @@ int main()
     sem_post(sem23);
     printf("Signalling semaphore 23\n");
 
-    // sem_close(sem12);
+    // sem_close(sem12);    
 }
