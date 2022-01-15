@@ -6,7 +6,6 @@
 #include<sys/types.h>
 
 struct msg_buf {
-
     long mtype;
     char mtext[100];
 };
