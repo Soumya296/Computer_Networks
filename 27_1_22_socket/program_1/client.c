@@ -17,7 +17,7 @@ int main()
     address.sin_family=AF_INET;
     address.sin_port=htons(8080);
     address.sin_addr.s_addr=inet_addr("127.0.0.1");
-    if(connect(sfd,(struct sockaddr *)&add,sizeof(add))<0)
+    if(connect(sfd,(struct sockaddr *)&address,sizeof(address))<0)
     {
         printf("connection failed\n");
         return 0;
