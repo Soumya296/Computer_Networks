@@ -85,17 +85,21 @@ int main()
         int n1 = read(pout_fd,&buf,1);
         int n2 = read(out_fd,&msg,1);
 
+        char snd[1024];
+
         while(n1 != 0)
         {
             if(buf == msg)
             {
                 if(buf == ' ')
                 {
-                    printf("Correct Output!\n");
+                    sprintf(snd,"Test case passed\n");
+                    send(nsfd,snd,sizeof(snd),0);
                 }
             }
             else{
-                printf("wrong output!");
+                sprintf(snd,"Test case failed \n");
+                send(nsfd,snd,sizeof(snd),0);
                 while(1)
                 {
                     n1 = read(pout_fd,&buf,1);
@@ -112,12 +116,15 @@ int main()
 
             if(n1 == 0 && buf == msg)
                 {
-                    printf("Correct Output!\n");
+                    sprintf(snd,"Test case passed\n");
+                    send(nsfd,snd,sizeof(snd),0);
                     break;
                 }
             if(n2 == 0) break;
         }
-        printf("\n");
+
+        sprintf(snd,"Com");
+        send(nsfd,snd,sizeof(snd),0);
 
     }
 

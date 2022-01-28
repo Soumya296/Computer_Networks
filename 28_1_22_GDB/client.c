@@ -31,6 +31,18 @@ int main()
     sprintf(buff, "./P.cpp");
     send(sfd,buff,sizeof(buff),0);
 
+    
+    int size;
+
+    for(;;)
+    {
+        int size = recv(sfd, buff, MAX, 0);
+        // printf("%c",buff[0]);
+        if(strncmp(buff,"Com",3)== 0) break;
+        printf("%s",buff);
+        
+    }
+
     close(sfd);
     return 0;
 }
