@@ -32,7 +32,6 @@ int main()
     printf("foreign ip : %s\n",ip);
     printf("foreign port %d \n",ntohs(address.sin_port));
     char msg[1024];
-    char buf[1024];
     printf("Client : ");
     scanf("%s",msg);
     send(sfd,msg,sizeof(msg),0);
