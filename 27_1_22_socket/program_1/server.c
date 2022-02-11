@@ -80,7 +80,7 @@ int main(int argc, char const * argv[])
             close(sfd);
             exit(0);
         }
-        printf("  accept completed successfully\n");
+        printf("accept completed successfully\n");
         getpeername(sfd,(struct sockaddr*)&address,sizeof(address));
         inet_ntop(AF_INET,&address.sin_addr,ip,sizeof(ip));
         printf("foreign ip : %s\n",ip);

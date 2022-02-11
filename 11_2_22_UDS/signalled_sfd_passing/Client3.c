@@ -33,8 +33,6 @@ void handler(int sifid, siginfo_t *info, void *context)
 
     msgrcv(msqid,&message,sizeof(message.mtext),(long)c_pid,0);
     sprintf(c_path,"%s",message.mtext);
-
-    msgsnd(msqid,&message,sizeof(message.mtext),0);
 }
 
 void signal_prev()
@@ -137,10 +135,9 @@ int main()
     message.mtype = (long)getpid();
     sprintf(message.mtext,"%s",path);
     msgsnd(msqid,&message,sizeof(message.mtext),0);
+    msgsnd(msqid,&message,sizeof(message.mtext),0);
 
-    signal_prev();
-
-    /* Accepting shared FD */
+    /*Creating UDS*/
 
     int usfd;
     struct sockaddr_un userv_addr,ucli_addr;
@@ -155,6 +152,11 @@ int main()
         perror("server: bind");
     listen(usfd, 5);
     ucli_len=sizeof(ucli_addr);
+
+    signal_prev();
+
+    /* Accepting shared FD */
+    
     int nusfd;
     nusfd=accept(usfd, (struct sockaddr *)&ucli_addr, &ucli_len);
 
