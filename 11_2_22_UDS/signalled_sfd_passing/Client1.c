@@ -32,8 +32,6 @@ void handler(int sifid, siginfo_t *info, void *context)
 
     msgrcv(msqid,&message,sizeof(message.mtext),(long)c_pid,0);
     sprintf(path,"%s",message.mtext);
-
-    msgsnd(msqid,&message,sizeof(message.mtext),0);
 }
 
 int send_fd(int socket, int fd_to_send)
@@ -164,7 +162,7 @@ int main()
 
 
     /* Sharing FD */
-    sleep(3);
+    sleep(5);
 
     int usfd;
     struct sockaddr_un userv_addr;

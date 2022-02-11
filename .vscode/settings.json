@@ -4,6 +4,8 @@
         "stdio.h": "c",
         "types.h": "c",
         "unistd.h": "c",
-        "semaphore.h": "c"
+        "semaphore.h": "c",
+        "socket.h": "c",
+        "stdlib.h": "c"
     }
 }
