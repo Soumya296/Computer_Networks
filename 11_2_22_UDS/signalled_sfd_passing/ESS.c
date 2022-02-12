@@ -62,7 +62,7 @@ int main()
 
     while(1)
     {
-        sleep(3);
+        sleep(5);
         service(nsfd,buffer);
     }
 

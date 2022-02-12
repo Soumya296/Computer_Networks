@@ -6,10 +6,10 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <string.h>
-#include<sys/ipc.h>
-#include<sys/msg.h>
-#include<sys/types.h>
-#include<signal.h>
+#include <sys/ipc.h>
+#include <sys/msg.h>
+#include <sys/types.h>
+#include <signal.h>
 
 #define MAX 10240
 #define PORT 8080
@@ -28,10 +28,14 @@ void handler(int sifid, siginfo_t *info, void *context)
 {
     c_pid = info->si_pid;
 
+    printf("Received signal from process with PID : %d\n",c_pid);
     /* Read the UD Socket address */
 
     msgrcv(msqid,&message,sizeof(message.mtext),(long)c_pid,0);
     sprintf(path,"%s",message.mtext);
+
+    printf("PID : %ld\n",message.mtype);
+    printf("Address : %s\n",message.mtext);
 }
 
 int send_fd(int socket, int fd_to_send)
@@ -116,6 +120,13 @@ int recv_fd(int socket)
 
 int main()
 {
+    /* Customizing signal behaviour */
+
+    struct sigaction handle={0};
+    handle.sa_flags = SA_SIGINFO;
+    handle.sa_sigaction = &handler;
+    sigaction(SIGUSR1,&handle,NULL);
+
     /*Message Queue Part Starts*/
 
     key_t key = ftok(message_queue,0);
@@ -146,23 +157,14 @@ int main()
 
     /*Requesting Service*/
 
+    sleep(3);
     printf("Requesting Service\n");
     char msg[MAX];
     printf("Client : ");
     scanf("%s",msg);
     send(sfd,msg,MAX,0);
 
-    /* Customizing signal behaviour */
-
-    struct sigaction handle={0};
-    handle.sa_flags = SA_SIGINFO;
-    handle.sa_sigaction = &handler;
-    sigaction(SIGUSR1,&handle,NULL);
-
-
-
     /* Sharing FD */
-    sleep(5);
 
     int usfd;
     struct sockaddr_un userv_addr;

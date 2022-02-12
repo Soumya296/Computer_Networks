@@ -6,10 +6,10 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <string.h>
-#include<sys/ipc.h>
-#include<sys/msg.h>
-#include<sys/types.h>
-#include<signal.h>
+#include <sys/ipc.h>
+#include <sys/msg.h>
+#include <sys/types.h>
+#include <signal.h>
 
 #define MAX 10240
 #define PORT 8080
@@ -29,17 +29,22 @@ void handler(int sifid, siginfo_t *info, void *context)
 {
     c_pid = info->si_pid;
 
+    printf("Received signal from process with PID : %d\n",c_pid);
     /* Read the UD Socket address */
 
     msgrcv(msqid,&message,sizeof(message.mtext),(long)c_pid,0);
     sprintf(c_path,"%s",message.mtext);
+
+    printf("PID : %ld\n",message.mtype);
+    printf("Address : %s\n",message.mtext);
 }
 
 void signal_prev()
 {
-    sleep(3);
     struct msg_buf msg;
     msgrcv(msqid,&msg,sizeof(msg.mtext),0,0);
+
+    printf("PID : %ld\n",msg.mtype);
 
     kill((pid_t)msg.mtype,SIGUSR1);
 }
@@ -126,6 +131,13 @@ int recv_fd(int socket)
 
 int main()
 {
+    /* Customizing signal behaviour */
+
+    struct sigaction handle={0};
+    handle.sa_flags = SA_SIGINFO;
+    handle.sa_sigaction = &handler;
+    sigaction(SIGUSR1,&handle,NULL);
+    
     /*Message Queue Part Starts*/
 
     key_t key = ftok(message_queue,0);
@@ -136,6 +148,8 @@ int main()
     sprintf(message.mtext,"%s",path);
     msgsnd(msqid,&message,sizeof(message.mtext),0);
     msgsnd(msqid,&message,sizeof(message.mtext),0);
+
+    signal_prev();
 
     /*Creating UDS*/
 
@@ -153,7 +167,7 @@ int main()
     listen(usfd, 5);
     ucli_len=sizeof(ucli_addr);
 
-    signal_prev();
+    
 
     /* Accepting shared FD */
     int nusfd;
@@ -162,18 +176,13 @@ int main()
     printf("\nAccepting socket fd from previous client\n");
     int sfd = recv_fd(usfd);
 
+    sleep(3);
     printf("Requesting Service\n");
     char msg[MAX];
     printf("Client : ");
     scanf("%s",msg);
     send(sfd,msg,MAX,0);
 
-    /* Customizing signal behaviour */
-
-    struct sigaction handle={0};
-    handle.sa_flags = SA_SIGINFO;
-    handle.sa_sigaction = &handler;
-    sigaction(SIGUSR1,&handle,NULL);
 
     /* Read the UD Socket address */
 
@@ -181,7 +190,7 @@ int main()
     sprintf(c_path,"%s",message.mtext);
 
     /* Sharing FD */
-    sleep(3);
+    ;
 
     usfd = socket(AF_UNIX, SOCK_STREAM, 0);
     if(usfd==-1)
